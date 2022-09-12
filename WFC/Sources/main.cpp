@@ -4,7 +4,7 @@
 #include <Chrono>
 
 //Rules for which tile can be next to which
-const std::vector<const int>& ConstraintSetup()
+std::vector<int> ConstraintSetup()
 {
     //Setting up each tile
     //Each side is 6 aligned
@@ -46,7 +46,7 @@ const std::vector<const int>& ConstraintSetup()
         1 << 18 | 1 << 22 | 1 << 23;    //Right
 
 
-    std::vector<const int> constraints;
+    std::vector<int> constraints;
     constraints.push_back(tile0);
     constraints.push_back(tile1);
     constraints.push_back(tile2);
@@ -83,11 +83,12 @@ int main()
     //Create waveFunction and generate the map
     WFC* waveFunction = new WFC();
     waveFunction->Init(TILEAMOUNT, ConstraintSetup());
+    waveFunction->ChooseRandomCell();
 
     //Function to collapse the wave
 
     //Expect WFC to return a vector, this is temporarely
-    std::vector<int> emptyvec;
+    //std::vector<int> emptyvec;
 
     //Main loop
     while (window.isOpen())
@@ -105,8 +106,8 @@ int main()
         for (int i = 0; i < GRIDSIZE; i++)
         {
             //Set postion of the sprite
-            sprite[emptyvec[i]].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
-            window.draw(sprite[emptyvec[i]]);
+            //sprite[emptyvec[i]].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
+            //window.draw(sprite[emptyvec[i]]);
         }
 
         window.display();
