@@ -11,9 +11,13 @@ public:
 	void ChooseRandomCell();
 	//void CheckConstraints(int cell);
 
+	void StartWFC();
 	void CheckSides(int side, int currentCell, int newCell);
 	void CheckCell(int cell);
+	void ResetCell();
+	void FinishWFC();
 
+	const std::vector<int>& GetMap();
 
 private:
 	unsigned int m_TileAmount;
@@ -23,4 +27,7 @@ private:
 	std::vector<std::pair<char, int>> m_CopyCellGrid; //Not the best way, but copy the cell grid when starting to guess, to allow backtracking
 
 	int m_GuessedCell;
+	int m_GuessedTile;
+
+	std::vector<int> m_DisplayVector;
 };

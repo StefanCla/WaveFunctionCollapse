@@ -83,7 +83,9 @@ int main()
     //Create waveFunction and generate the map
     WFC* waveFunction = new WFC();
     waveFunction->Init(TILEAMOUNT, ConstraintSetup());
-    waveFunction->ChooseRandomCell();
+    waveFunction->StartWFC();
+
+
 
     //Function to collapse the wave
 
@@ -106,8 +108,8 @@ int main()
         for (int i = 0; i < GRIDSIZE; i++)
         {
             //Set postion of the sprite
-            //sprite[emptyvec[i]].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
-            //window.draw(sprite[emptyvec[i]]);
+            sprite[waveFunction->GetMap()[i]].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
+            window.draw(sprite[waveFunction->GetMap()[i]]);
         }
 
         window.display();

@@ -1,6 +1,7 @@
 #include "Precomp.hpp"
 #include "WFC.hpp"
 #include <assert.h>
+#include <bitset>
 
 WFC::WFC() :
 	m_TileAmount(-1),
@@ -26,10 +27,9 @@ void WFC::Init(unsigned int tileAmount, std::vector<int> constraints)
 	}
 }
 
-//Get a random cell and start the WFC
-void WFC::ChooseRandomCell()
+//Start with a random cell & tile
+void WFC::StartWFC()
 {
-	//Choose a random cell with a random tile to start the wave
 	int cell = rand() % GRIDSIZE;
 	int tile = rand() % TILEAMOUNT;
 
@@ -37,9 +37,85 @@ void WFC::ChooseRandomCell()
 	m_CellGrid[cell].first = 1 << tile;
 	m_CellGrid[cell].second = tile;
 
-	m_GuessedCell = cell;
-
+	//Begin WFC
 	CheckCell(cell);
+
+	FinishWFC();
+}
+
+//Get a random cell and start the WFC
+void WFC::ChooseRandomCell()
+{
+	//Get Lowest Entropy
+	std::vector<int> lowestEntropyCells;
+	size_t flagCount = -1;
+	for (int i = 0; i < GRIDSIZE; i++)
+	{
+		std::bitset<32> bits(m_CellGrid[i].first);
+		std::size_t num = bits.count();
+
+		if (num >= 2) //Must have at least 2 possibilities
+		{
+			if (flagCount == -1)
+			{
+				flagCount = num;
+				lowestEntropyCells.push_back(i);
+			}
+			else if (flagCount == num)
+			{
+				lowestEntropyCells.push_back(i);
+			}
+			else if (num < flagCount)
+			{
+				flagCount = num;
+				lowestEntropyCells.clear();
+				lowestEntropyCells.push_back(i);
+			}
+
+			if (num == 0)
+				printf("Error");
+		}
+	}
+
+	//Choose cell with lowest entropy
+	int cell = rand() % lowestEntropyCells.size();
+
+	//Choose tile in the lowest entropy cell
+	int tileID = rand() % flagCount + 1;
+	int tile = -1;
+	for (int i = 0; i < TILEAMOUNT; i++)
+	{
+		if (m_CellGrid[lowestEntropyCells[cell]].first & (1 << i))
+		{
+			tileID--;
+			if (tileID <= 0)
+			{
+				tile = i;
+				break;
+			}
+		}
+	}
+
+	m_CellGrid[lowestEntropyCells[cell]].first = 0;
+	m_CellGrid[lowestEntropyCells[cell]].first = 1 << tile;
+	m_CellGrid[lowestEntropyCells[cell]].second = tile;
+
+	m_GuessedCell = lowestEntropyCells[cell];
+	m_GuessedTile = tile;
+
+	CheckCell(lowestEntropyCells[cell]);
+
+	////Choose a random cell with a random tile to start the wave
+	//int cell = rand() % GRIDSIZE;
+	//int tile = rand() % TILEAMOUNT;
+
+	//m_CellGrid[cell].first = 0;
+	//m_CellGrid[cell].first = 1 << tile;
+	//m_CellGrid[cell].second = tile;
+
+	//m_GuessedCell = cell;
+
+	//CheckCell(cell);
 }
 
 ////Check constraints of all the tiles
@@ -191,11 +267,27 @@ void WFC::CheckCell(int cell)
 		CheckSides(3, cell, rightCell);
 
 	//Check if its solved, if not, get random cell with lowest entropy and choose a random tile. Recurse again
+
+	bool isSolved = true;
+	for (int i = 0; i < GRIDSIZE; i++)
+	{
+		if (m_CellGrid[i].second == -1)
+			isSolved = false;
+	}
+
+	if (!isSolved)
+		ChooseRandomCell();
 }
 
 //Check if we can reduce the super position of the new cell
 void WFC::CheckSides(int side, int currentCell, int newCell)
 {
+	if (m_CellGrid[newCell].second != -1)
+		return;
+
+	if (newCell == 4)
+		printf("break\n");
+
 	//Get bit alignment
 	int bitAllign = 0;
 	switch (side)
@@ -210,14 +302,35 @@ void WFC::CheckSides(int side, int currentCell, int newCell)
 		break;
 	}
 
+	////Test
+	//int lowestEntropyCell = 0;
+	//size_t flagCount = -1;
+	//for (int i = 0; i < GRIDSIZE; i++)
+	//{
+	//	std::bitset<sizeof(m_CellGrid[i].first)> bits(m_CellGrid[i].first);
+	//	std::size_t num = bits.count();
+	//	
+	//	if (flagCount == -1)
+	//	{
+	//		flagCount = num;
+	//		lowestEntropyCell = i;
+	//	}
+	//	else if (num < flagCount)
+	//	{
+	//		flagCount = num;
+	//		lowestEntropyCell = i;
+	//	}
+	//}
+	////Test
+
 	//Get all constraints
 	int combinedConstraints = 0;
 	for (int i = 0; i < TILEAMOUNT; i++)
 	{
-		if (m_CellGrid[currentCell].first == (1 << i))
+		if (m_CellGrid[currentCell].first & (1 << i))
 		{
 			int mask = ((1 << 6) - 1) << bitAllign;
-			mask &= (m_Constraints[i] << bitAllign);
+			mask &= m_Constraints[i];
 
 			combinedConstraints |= mask;
 		}
@@ -239,7 +352,7 @@ void WFC::CheckSides(int side, int currentCell, int newCell)
 	int tile = -1;
 	for (int i = 0; i < TILEAMOUNT; i++)
 	{
-		if (m_CellGrid[newCell].first == (1 << i))
+		if (m_CellGrid[newCell].first & (1 << i))
 		{
 			positionsRemaining++;
 			tile = i;
@@ -257,4 +370,20 @@ void WFC::CheckSides(int side, int currentCell, int newCell)
 		CheckCell(newCell);
 		return;
 	}
+}
+
+void WFC::ResetCell()
+{
+
+}
+
+void WFC::FinishWFC()
+{
+	for (int i = 0; i < GRIDSIZE; i++)
+		m_DisplayVector.push_back(m_CellGrid[i].second);
+}
+
+const std::vector<int>& WFC::GetMap()
+{
+	return m_DisplayVector;
 }
