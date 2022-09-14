@@ -6,6 +6,7 @@ Here is an example of what it looks after the basic implementation was finished:
 ![First iteration](/Assets/Github_Images/Sample.png)
 
 This was done with the following tileset:
+
 ![Tileset](/Assets/Tile_Spritesheet.png)
 
 # Setup
