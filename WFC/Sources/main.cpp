@@ -3,6 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include <Chrono>
 
+//Note:
+//I'm aware that i copy vectors in some cases rather than pass by reference
+//However, currently optimization is not the priority of this project
+
 //Rules for which tile can be next to which
 std::vector<int> ConstraintSetup()
 {
@@ -11,7 +15,7 @@ std::vector<int> ConstraintSetup()
     //0-5 = top | 6-11 = bottom | 12 - 17 = left | 18 - 23 = right
     const int tile0 =
         1 << 1 | 1 << 2 | 1 << 5 |      //Top
-        1 << 6 | 1 << 9 | 1 << 10 |     //Bottom
+        1 << 8 | 1 << 9 | 1 << 10 |     //Bottom
         1 << 14 | 1 << 16 | 1 << 17 |   //Left
         1 << 19 | 1 << 20 | 1 << 21;    //Right
 
@@ -22,7 +26,7 @@ std::vector<int> ConstraintSetup()
         1 << 19 | 1 << 20 | 1 << 21;    //Right
 
     const int tile2 =
-        1 << 0 | 1 << 4 | 1 << 5 |      //Top
+        1 << 0 | 1 << 3 | 1 << 4 |      //Top
         1 << 6 | 1 << 7 | 1 << 11 |     //Bottom
         1 << 12 | 1 << 13 | 1 << 15 |   //Left
         1 << 18 | 1 << 22 | 1 << 23;    //Right
@@ -60,7 +64,7 @@ std::vector<int> ConstraintSetup()
 int main()
 {
     //Setup window
-    sf::RenderWindow window(sf::VideoMode(192, 192), "WFC test");
+    sf::RenderWindow window(sf::VideoMode(GRIDSIZEX * 64, GRIDSIZEY * 64), "WFC test");
 
     //Import texture
     sf::Texture texture;
@@ -81,16 +85,9 @@ int main()
     }
 
     //Create waveFunction and generate the map
-    WFC* waveFunction = new WFC();
-    waveFunction->Init(TILEAMOUNT, ConstraintSetup());
+    WFC* waveFunction = new WFC(ConstraintSetup());
+    waveFunction->Initialization();
     waveFunction->StartWFC();
-
-
-
-    //Function to collapse the wave
-
-    //Expect WFC to return a vector, this is temporarely
-    //std::vector<int> emptyvec;
 
     //Main loop
     while (window.isOpen())
@@ -103,13 +100,16 @@ int main()
                 window.close();
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+            waveFunction->RestartWFC();
+
         window.clear();
 
         for (int i = 0; i < GRIDSIZE; i++)
         {
             //Set postion of the sprite
-            sprite[waveFunction->GetMap()[i]].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
-            window.draw(sprite[waveFunction->GetMap()[i]]);
+            sprite[waveFunction->GetMap()[i].second].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
+            window.draw(sprite[waveFunction->GetMap()[i].second]);
         }
 
         window.display();

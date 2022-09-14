@@ -1,7 +1,7 @@
 #pragma once
 
-#define GRIDSIZE	9
-#define GRIDSIZEX	3
-#define GRIDSIZEY	3
+#define GRIDSIZE	150
+#define GRIDSIZEX	15
+#define GRIDSIZEY	10
 
 #define TILEAMOUNT	6
