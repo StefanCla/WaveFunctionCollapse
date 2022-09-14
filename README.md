@@ -8,9 +8,13 @@ It should run out of the box on VS2022 and makes use of SFML as dependency.
 
 # Roadmap
 ~~Finish basic WFC~~
+
 ~~Support different grid sizes~~
+
 Support different tilesets
+
 Implement back-tracking
+
 
 # Known bugs
 None
