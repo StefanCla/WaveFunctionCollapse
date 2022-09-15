@@ -34,4 +34,6 @@ private:
 
 	int m_GuessedCell;
 	int m_GuessedTile;
+
+	int m_SolvedTiles;
 };

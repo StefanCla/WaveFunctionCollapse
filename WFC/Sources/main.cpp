@@ -64,7 +64,7 @@ std::vector<int> ConstraintSetup()
 int main()
 {
     //Setup window
-    sf::RenderWindow window(sf::VideoMode(GRIDSIZEX * 64, GRIDSIZEY * 64), "WFC test");
+    sf::RenderWindow window(sf::VideoMode(GRIDSIZEX * TILESIZE, GRIDSIZEY * TILESIZE), "WFC test");
 
     //Import texture
     sf::Texture texture;
@@ -74,13 +74,13 @@ int main()
     }
 
     //Sample the sprites from the texture
-    sf::Sprite sprite[6];
+    sf::Sprite sprite[TILEAMOUNT];
     for (int y = 0; y < 2; y++)
     {
         for (int x = 0; x < 3; x++)
         {
             sprite[x + (3 * y)].setTexture(texture);
-            sprite[x + (3 * y)].setTextureRect(sf::IntRect(x * 64, y * 64, 64, 64));
+            sprite[x + (3 * y)].setTextureRect(sf::IntRect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE));
         }
     }
 
@@ -108,7 +108,7 @@ int main()
         for (int i = 0; i < GRIDSIZE; i++)
         {
             //Set postion of the sprite
-            sprite[waveFunction->GetMap()[i].second].setPosition(sf::Vector2f((i % GRIDSIZEX) * 64.0f, (i / GRIDSIZEX) * 64.0f));
+            sprite[waveFunction->GetMap()[i].second].setPosition(sf::Vector2f((i % GRIDSIZEX) * TILESIZE, (i / GRIDSIZEX) * TILESIZE));
             window.draw(sprite[waveFunction->GetMap()[i].second]);
         }
 

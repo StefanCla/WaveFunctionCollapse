@@ -6,7 +6,8 @@
 
 WFC::WFC(std::vector<int> constraints) :
 	m_GuessedCell(-1),
-	m_GuessedTile(-1)
+	m_GuessedTile(-1),
+	m_SolvedTiles(0)
 {
 	m_Constraints = constraints;
 
@@ -42,6 +43,7 @@ void WFC::StartWFC()
 
 	m_GuessedCell = cell;
 	m_GuessedTile = tile;
+	m_SolvedTiles++;
 
 	CheckCell(cell);
 }
@@ -50,6 +52,7 @@ void WFC::StartWFC()
 void WFC::RestartWFC()
 {
 	m_CellGrid.clear();
+	m_SolvedTiles = 0;
 
 	//Set data
 	Initialization();
@@ -118,6 +121,7 @@ void WFC::ChooseRandomCell()
 
 	m_GuessedCell = lowestEntropyCells[cell];
 	m_GuessedTile = tile;
+	m_SolvedTiles++;
 
 	CheckCell(lowestEntropyCells[cell]);
 }
@@ -146,16 +150,10 @@ void WFC::CheckCell(int cell)
 	if (rightCell != -1)
 		CheckSides(Sides::RIGHT, cell, rightCell);
 
-	//Check if its solved, if not, get random cell with lowest entropy and choose a random tile. Recurse again
-	bool isSolved = true;
-	for (int i = 0; i < GRIDSIZE; i++)
-	{
-		if (m_CellGrid[i].second == -1)
-			isSolved = false;
-	}
-
-	if (!isSolved && m_GuessedCell == cell)
-		ChooseRandomCell();
+	//Check if grid has fully collapsed
+	if (m_SolvedTiles != GRIDSIZE)
+		if(m_GuessedCell == cell)
+			ChooseRandomCell();
 }
 
 //Check if we can reduce the super position of the new cell
@@ -219,6 +217,7 @@ void WFC::CheckSides(Sides side, int currentCell, int newCell)
 	else if (positionsRemaining == 1)
 	{
 		m_CellGrid[newCell].second = tile;
+		m_SolvedTiles++;
 	}
 
 	//Check the sides of the cell that just changed
