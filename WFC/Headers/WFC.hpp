@@ -13,22 +13,24 @@ enum class Sides
 class WFC
 {
 public:
-	WFC(const long long* constraints);
+	WFC(std::vector<int> constraints);
 	~WFC();
 
 	void Initialization();
 	void StartWFC();
 	void RestartWFC();
 
-	const std::pair<int, int>* GetMap();
+	const std::vector<std::pair<char,int>>& GetMap();
 
 private:
 	void CheckCell(int cell);
 	void CheckSides(Sides side, int currentCell, int newCell);
 	void ChooseRandomCell();
 
-	const long long* m_Constraints; //Rules for each tile
-	std::pair<int, int>* m_CellGrid;//First char are the posibilities, second int is the final tile
+	std::vector<int> m_Constraints; //Rules for each tile
+
+	std::vector<std::pair<char, int>> m_CellGrid; //First char are the posibilities, second int is the final tile. 
+	std::vector<std::pair<char, int>> m_CopyCellGrid; //Not the best way, but copy the cell grid when starting to guess, to allow backtracking
 
 	int m_GuessedCell;
 	int m_GuessedTile;

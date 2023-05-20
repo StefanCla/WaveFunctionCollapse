@@ -4,13 +4,12 @@
 #include <bitset>
 #include <chrono>
 
-WFC::WFC(const long long* constraints) :
+WFC::WFC(std::vector<int> constraints) :
 	m_GuessedCell(-1),
 	m_GuessedTile(-1),
 	m_SolvedTiles(0)
 {
 	m_Constraints = constraints;
-	m_CellGrid = new std::pair<int, int>[GRIDSIZE];
 
 #ifdef _DEBUG
 	srand(0); //Seed with 0 for debugging
@@ -20,18 +19,15 @@ WFC::WFC(const long long* constraints) :
 }
 
 WFC::~WFC()
-{
-	delete m_Constraints;
-	delete m_CellGrid;
-}
+{}
 
 void WFC::Initialization()
 {
-	int possibleTiles = 65535; //Flip 16 bits to true
+	char possibleTiles = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5;
 
 	for (int i = 0; i < GRIDSIZE; i++)
 	{
-		m_CellGrid[i] = std::pair<int, int>(possibleTiles, -1);
+		m_CellGrid.push_back(std::pair<char, int>( possibleTiles, -1));
 	}
 }
 
@@ -55,10 +51,7 @@ void WFC::StartWFC()
 //Reset WFC and start again
 void WFC::RestartWFC()
 {
-	int possibleTiles = 65535; //Flip 16 bits to true
-	for (int i = 0; i < GRIDSIZE; i++)
-		m_CellGrid[i] = std::pair<int, int>(possibleTiles, -1);
-
+	m_CellGrid.clear();
 	m_SolvedTiles = 0;
 
 	//Set data
@@ -79,9 +72,6 @@ void WFC::ChooseRandomCell()
 		std::bitset<32> bits(m_CellGrid[i].first);
 		std::size_t num = bits.count();
 
-		if (num == 0)
-			assert(true && "ERROR: no possibilities left!");
-
 		if (num >= 2) //Must have at least 2 possibilities
 		{
 			if (flagCount == -1)
@@ -99,6 +89,9 @@ void WFC::ChooseRandomCell()
 				lowestEntropyCells.clear();
 				lowestEntropyCells.push_back(i);
 			}
+
+			if (num == 0)
+				assert(true && "ERROR: no possibilities left!");
 		}
 	}
 
@@ -150,7 +143,7 @@ void WFC::CheckCell(int cell)
 	//Check sides
 	if(topCell >= 0)
 		CheckSides(Sides::TOP, cell, topCell);
-	if(bottomCell < GRIDSIZE)
+	if(bottomCell < m_CellGrid.size())
 		CheckSides(Sides::BOTTOM, cell, bottomCell);
 	if (leftCell != -1)
 		CheckSides(Sides::LEFT, cell, leftCell);
@@ -185,12 +178,12 @@ void WFC::CheckSides(Sides side, int currentCell, int newCell)
 	}
 
 	//Get all constraints
-	long long combinedConstraints = 0;
+	int combinedConstraints = 0;
 	for (int i = 0; i < TILEAMOUNT; i++)
 	{
 		if (m_CellGrid[currentCell].first & (1 << i))
 		{
-			long long mask = static_cast<long long>(((1 << TILEAMOUNT) - static_cast<long long>(1)) << bitAlign);
+			int mask = ((1 << TILEAMOUNT) - 1) << bitAlign;
 			mask &= m_Constraints[i];
 
 			combinedConstraints |= mask;
@@ -232,7 +225,7 @@ void WFC::CheckSides(Sides side, int currentCell, int newCell)
 }
 
 //Return cellgrid
-const std::pair<int, int>* WFC::GetMap()
+const std::vector<std::pair<char, int>>& WFC::GetMap()
 {
 	return m_CellGrid;
 }

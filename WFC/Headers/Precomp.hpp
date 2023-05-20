@@ -1,11 +1,8 @@
 #pragma once
 
-#define GRIDSIZEX	30
-#define GRIDSIZEY	25
-#define GRIDSIZE GRIDSIZEX * GRIDSIZEY
+#define GRIDSIZE	150
+#define GRIDSIZEX	15
+#define GRIDSIZEY	10
 
-#define SPRITESHEETFILENAME "urban.png"
-#define SPRITESHEETX 4
-#define SPRITESHEETY 4
-#define TILEAMOUNT	16
-#define TILESIZE 32.0f
+#define TILEAMOUNT	6
+#define TILESIZE 64.0f
