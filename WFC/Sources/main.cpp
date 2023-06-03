@@ -1,8 +1,10 @@
 #include "Precomp.hpp"
 #include "WFC.hpp"
+#include "Constrain.hpp"
 #include <SFML/Graphics.hpp>
 #include <Chrono>
 #include <bitset>
+#include "Image.hpp"
 
 //Rules for which tile can be next to which
 const long long* ConstraintSetup()
@@ -281,6 +283,16 @@ const long long* ConstraintSetup2()
 
 int main()
 {
+    //Important and sample from image
+    std::string path = "../Assets/Custom.png";
+    Image* image = new Image(&path, 16, false, false);
+
+    //Build constrains using the new pixel comparison
+    Constrain* constrain = new Constrain(*image);
+    constrain->BuildWithImage();
+
+
+    //Previews version of the WFC
     //Setup window
     sf::RenderWindow window(sf::VideoMode(GRIDSIZEX * TILESIZE, GRIDSIZEY * TILESIZE), "WFC second iteration");
 
@@ -303,7 +315,7 @@ int main()
     }
 
     //Create waveFunction and generate the map
-    WFC* waveFunction = new WFC(ConstraintSetup());
+    WFC* waveFunction = new WFC(ConstraintSetup2());
     waveFunction->Initialization();
     waveFunction->StartWFC();
 

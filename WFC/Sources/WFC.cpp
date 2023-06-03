@@ -177,6 +177,7 @@ void WFC::CheckSides(Sides side, int currentCell, int newCell)
 	case Sides::TOP:	bitAlign = 0;
 		break;
 	case Sides::BOTTOM:	bitAlign = TILEAMOUNT;
+
 		break;
 	case Sides::LEFT:	bitAlign = TILEAMOUNT * 2;
 		break;

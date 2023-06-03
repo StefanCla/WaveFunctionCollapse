@@ -27,12 +27,24 @@
     <ClCompile Include="Sources\Precomp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Constrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\WFC.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Precomp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Constrain.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
