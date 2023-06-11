@@ -16,7 +16,8 @@ public:
 	//Import constrains from a csv file
 	void BuildWithCSV(const std::string* csvPath);
 
-private:
 	std::vector<std::vector<int>> m_Constrains;
+
+private:
 	Image& m_Image;
 };

@@ -191,7 +191,7 @@ void Image::WriteImages()
 		for (size_t i = 0; i < m_ImageAmount; i++)
 		{
 			std::string imageName = path + "/" + std::to_string(i) + ".png";
-			stbi_write_png(imageName.c_str(), m_SampleSize, m_SampleSize, m_SourceChannels, static_cast<void*>(m_Images[i]), NSize * m_SourceChannels);
+			stbi_write_png(imageName.c_str(), m_SampleSize, m_SampleSize, m_SourceChannels, static_cast<void*>(m_Images[i]), TILESIZE * m_SourceChannels);
 		}
 	}
 }

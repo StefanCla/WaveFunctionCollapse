@@ -196,12 +196,14 @@ xcopy /y "$(SolutionDir)Dlls\$(PlatformShortName)\$(Configuration)\sfml-window-2
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sources\Simple.cpp" />
     <ClCompile Include="Sources\WFC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Constrain.hpp" />
     <ClInclude Include="Headers\Image.hpp" />
     <ClInclude Include="Headers\Precomp.hpp" />
+    <ClInclude Include="Headers\Simple.hpp" />
     <ClInclude Include="Headers\WFC.hpp" />
   </ItemGroup>
   <ItemGroup>

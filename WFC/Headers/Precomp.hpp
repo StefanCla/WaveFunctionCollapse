@@ -1,16 +1,14 @@
 #pragma once
 
-#define GRIDSIZEX	30
-#define GRIDSIZEY	25
+#define GRIDSIZEX	3
+#define GRIDSIZEY	3
 #define GRIDSIZE GRIDSIZEX * GRIDSIZEY
 
-#define SPRITESHEETFILENAME "urban.png"
-#define SPRITESHEETX 4
-#define SPRITESHEETY 4
-#define TILEAMOUNT	16
-#define TILESIZE 32.0f
+#define SPRITESHEETFILENAME "Custom.png"
+#define SPRITESHEETX 2
+#define SPRITESHEETY 2
+#define TILEAMOUNT	4
+#define TILESIZE 16.0f
 
 #define PI 3.14159265f
-#define DEG2RAD(deg) deg*(PI / 180)
-
-#define NSize 16
+#define DEG2RAD(deg) deg*(PI / 180);

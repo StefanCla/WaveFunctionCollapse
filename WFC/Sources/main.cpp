@@ -5,6 +5,7 @@
 #include <Chrono>
 #include <bitset>
 #include "Image.hpp"
+#include "Simple.hpp"
 
 //Rules for which tile can be next to which
 const long long* ConstraintSetup()
@@ -315,9 +316,13 @@ int main()
     }
 
     //Create waveFunction and generate the map
-    WFC* waveFunction = new WFC(ConstraintSetup2());
-    waveFunction->Initialization();
-    waveFunction->StartWFC();
+    //WFC* waveFunction = new WFC(ConstraintSetup2());
+    //waveFunction->Initialization();
+    //waveFunction->StartWFC();
+
+    Simple* simple = new Simple(*constrain);
+    simple->Initialization();
+    simple->StartWFC();
 
     //Main loop
     while (window.isOpen())
@@ -331,21 +336,25 @@ int main()
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-            waveFunction->RestartWFC();
+            simple->RestartWFC();
 
         window.clear();
 
         for (int i = 0; i < GRIDSIZE; i++)
         {
             //Set postion of the sprite
-            sprite[waveFunction->GetMap()[i].second].setPosition(sf::Vector2f((i % GRIDSIZEX) * TILESIZE, (i / GRIDSIZEX) * TILESIZE));
-            window.draw(sprite[waveFunction->GetMap()[i].second]);
+            //sprite[waveFunction->GetMap()[i].second].setPosition(sf::Vector2f((i % GRIDSIZEX) * TILESIZE, (i / GRIDSIZEX) * TILESIZE));
+            //window.draw(sprite[waveFunction->GetMap()[i].second]);
+
+            sprite[simple->GetCellGrid()[i][0]].setPosition(sf::Vector2f((i % GRIDSIZEX) * TILESIZE, (i / GRIDSIZEX) * TILESIZE));
+            window.draw(sprite[simple->GetCellGrid()[i][0]]);
         }
 
         window.display();
     }
 
-    delete waveFunction;
+    //delete waveFunction;
+    delete simple;
 
     return 0;
 }
