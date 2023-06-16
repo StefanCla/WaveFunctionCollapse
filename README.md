@@ -20,8 +20,8 @@ Example of a result of the input image from above:
 - [X] Rework image importing
 - [X] Add image sampling
 - [X] Add pixel comparison constrain building
-- [ ] Add CSV constrain building
-- [ ] Rework WFC simple method to reflect on the new constrain system
+- [X] Add CSV constrain building
+- [X] Rework WFC simple method to reflect on the new constrain system
 - [ ] Add WFC overlapping method
 
 # Other
