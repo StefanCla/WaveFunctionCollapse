@@ -14,7 +14,7 @@ public:
 	void BuildWithImage();
 
 	//Import constrains from a csv file
-	void BuildWithCSV(const std::string* csvPath);
+	void BuildWithCSV(const std::string& csvPath);
 
 	std::vector<std::vector<int>> m_Constrains;
 

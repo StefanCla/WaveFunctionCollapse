@@ -1,0 +1,46 @@
+/Make sure to follow the specified convention
+/Comment by starting the row with a forward-slash
+
+/[Tile number], [Tile side], [Tile numbers that the tile can connect to]
+/Tile sides are from 0 to 3. (0 Top, 1 Left, 2 Bottom, 3 Right)
+
+/There must be a constrain for each tile and reflection / mirror, no more and no less
+/Tile number starts at 0. (Example: 5 tiles are between 0 to 4)
+
+
+/Working example using the Test.png image file, with 4 images and no reflections and mirrors.
+/Tile 0
+0,0,2,3
+0,1,1,3
+0,2,2,3
+0,3,1,3
+
+/Tile 1
+1,0,2,3
+1,1,0,2
+1,2,2,3
+1,3,0,2
+
+/Tile 2
+2,0,0,1
+2,1,1,3
+2,2,0,1
+2,3,1,3
+
+/Tile 3
+3,0,0,1
+3,1,1,3
+3,2,0,1
+3,3,1,3
+
+/If you want to leave constrains empty for a tile, do:
+/[Tile number] (without the forward slash)
+
+/If you want to leave constrains empty for a certain side, do:
+/[Tile number], [Tile side]
+
+//Example:
+/2,0,0,1
+/2,1,	  //This side is empty
+/2,2,0,1
+/2,3,1,3

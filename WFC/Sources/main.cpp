@@ -291,6 +291,10 @@ int main()
     //Build constrains using the new pixel comparison
     Constrain* constrain = new Constrain(*image);
     constrain->BuildWithImage();
+    
+    //Load constrains in using a cvs file
+    //std::string filePath = "../Assets/Example.csv";
+    //constrain->BuildWithCSV(filePath);
 
 
     //Previews version of the WFC

@@ -1,6 +1,9 @@
 #include "Precomp.hpp"
 #include "Constrain.hpp"
 #include "Image.hpp"
+#include <fstream>
+#include <sstream>
+#include <assert.h>
 
 Constrain::Constrain(Image& image) :
 	m_Image(image)
@@ -30,13 +33,17 @@ void Constrain::BuildWithImage()
 
 					switch (s)
 					{
-					case 0: currentImage.x = p; currentImage.y = 0; otherImage.x = p; otherImage.y = m_Image.m_SampleSize - 1; //Top
+						//Top
+					case 0: currentImage.x = p; currentImage.y = 0; otherImage.x = p; otherImage.y = m_Image.m_SampleSize - 1;
 						break;
-					case 1: currentImage.x = m_Image.m_SampleSize - 1; currentImage.y = p; otherImage.x = 0; otherImage.y = p; //Left
+						//Left
+					case 1: currentImage.x = m_Image.m_SampleSize - 1; currentImage.y = p; otherImage.x = 0; otherImage.y = p;
 						break;
-					case 2: currentImage.x = p; currentImage.y = m_Image.m_SampleSize - 1; otherImage.x = p; otherImage.y = 0; //Bottom
+						//Bottom
+					case 2: currentImage.x = p; currentImage.y = m_Image.m_SampleSize - 1; otherImage.x = p; otherImage.y = 0;
 						break;
-					case 3: currentImage.x = 0; currentImage.y = p; otherImage.x = m_Image.m_SampleSize - 1; otherImage.y = p; //Right
+						//Right
+					case 3: currentImage.x = 0; currentImage.y = p; otherImage.x = m_Image.m_SampleSize - 1; otherImage.y = p;
 						break;
 					}
 
@@ -61,5 +68,75 @@ void Constrain::BuildWithImage()
 }
 
 //Load in a csv file that contains the constrains for each image
-void Constrain::BuildWithCSV(const std::string* csvPath)
-{}
+//Follow the convention in the file
+//Thanks to: https://java2blog.com/read-csv-file-in-cpp/ for the inspiration
+void Constrain::BuildWithCSV(const std::string& csvPath)
+{
+	std::fstream file(csvPath.c_str());
+
+	if (file.is_open())
+	{
+		std::vector<int> temporaryConstrains;
+		std::string fileLine, fileWord;
+		while (std::getline(file, fileLine))
+		{
+			temporaryConstrains.clear();
+
+			//Exclude comments
+			if (fileLine[0] == '/')
+				continue;
+
+			//Seperate each number by use of comma
+			std::stringstream stream(fileLine);
+			while (std::getline(stream, fileWord, ','))
+			{
+				temporaryConstrains.push_back(atoi(fileWord.c_str()));
+			}
+
+			//Add offsets to the array 
+			if (temporaryConstrains.size() > 1)
+			{
+				int tileOffSet = 0;
+				switch (temporaryConstrains[1])
+				{
+				case 1: tileOffSet = TILEAMOUNT * 1;	//Left
+					break;
+				case 2: tileOffSet = TILEAMOUNT * 2;	//Down
+					break;
+				case 3: tileOffSet = TILEAMOUNT * 3;	//Right
+					break;
+				default: tileOffSet = 0;				//Up
+					break;
+				}
+
+				//Add the constrains to the array
+				//Start at index 2 as index 0 is reserved for the tile
+				//And index 1 is reserved for index 1
+				for (size_t i = 2; i < temporaryConstrains.size(); i++)
+				{
+					if (m_Constrains.size() < (temporaryConstrains[0] + 1))
+					{
+						std::vector<int> temp;
+						temp.push_back(tileOffSet + temporaryConstrains[i]);
+						m_Constrains.push_back(temp);
+					}
+					else
+						m_Constrains[temporaryConstrains[0]].push_back(tileOffSet + temporaryConstrains[i]);
+
+				}
+			}
+			else if (temporaryConstrains.size() == 1) //If a tile has not constrains, just add an empty vector
+			{
+				m_Constrains.push_back(std::vector<int>());
+			}
+		}
+
+		if (m_Constrains.size() != TILEAMOUNT)
+			assert(false && "Make sure there are as many constrains as there are tiles");
+	}
+	else
+	{
+		printf("Unable to open the csv file\n");
+		return;
+	}
+}

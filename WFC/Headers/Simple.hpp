@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
+#include <stack>
 
 class Constrain;
 
-enum class SideD
+enum SideD
 {
-	Up,
+	Up = 0,
 	Left,
 	Down,
 	Right
@@ -24,15 +25,22 @@ public:
 	std::vector<std::vector<int>> GetCellGrid();
 
 private:
-	void ChooseRandomCell();
-	void CheckCell(int cell);
-	void CheckSides(SideD side, int currentCell, int newCell);
+	void RunWFC();
+	int ChooseRandomCell();
+	bool CheckCell(int cell);
+	bool CheckSides(SideD side, int currentCell, int newCell);
+
+
+	int GetAdjacentTile(int currentCell, SideD side);
+	bool CheckSide(int currenCell, int adjacentCell, SideD side);
 
 private:
 	std::vector<std::vector<int>> m_CellGrid;
+	//std::vector<int>* m_CellStack;
 	Constrain& m_Constrain;
 
 	int m_RestartCount;
 	int m_SolvedTiles;
+	bool m_Stable;
 
 };
