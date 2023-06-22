@@ -19,9 +19,7 @@ Simple::Simple(Constrain& constrain) :
 }
 
 Simple::~Simple()
-{
-	//delete m_CellStack;
-}
+{}
 
 void Simple::Initialization()
 {
@@ -35,14 +33,10 @@ void Simple::Initialization()
 
 		m_CellGrid.push_back(tempGrid);
 	}
-
-	//m_CellStack = new std::vector<int>();
 }
 
 void Simple::StartWFC()
 {
-	//m_CellStack->push_back(ChooseRandomCell());
-
 	while (m_SolvedTiles != GRIDSIZE && m_Stable)
 		RunWFC();
 
@@ -55,7 +49,6 @@ void Simple::RestartWFC()
 	m_RestartCount++;
 
 	m_CellGrid.clear();
-	//m_CellStack->clear();
 	Initialization();
 
 	m_SolvedTiles = 0;
@@ -80,26 +73,6 @@ void Simple::RunWFC()
 				break;
 		}
 	}
-
-
-
-
-
-
-	//while (!m_CellStack->empty() && m_Stable)
-	//{
-	//	int index = rand() % m_CellStack->size();
-
-	//	int currentCell = m_CellStack[0][index];
-	//	m_CellStack->erase(m_CellStack->begin() + index);
-
-	//	if (!CheckCell(currentCell))
-	//		m_Stable = false;
-
-	//}
-
-	//if (!m_Stable)
-	//	RestartWFC();
 }
 
 int Simple::ChooseRandomCell()
@@ -136,121 +109,9 @@ int Simple::ChooseRandomCell()
 
 	m_SolvedTiles++;
 
-	//Check cell
-	//CheckCell(chosenCell);
+	//CheckCell(chosenCell); //Could be added to change the behaviour of the WFC
 	return chosenCell;
 }
-
-//Check all adjacent sides of the cell
-//bool Simple::CheckCell(int cell)
-//{
-//	int topCell = cell - GRIDSIZEX;
-//	int bottomCell = cell + GRIDSIZEX;
-//	int leftCell = -1;
-//	int rightCell = -1;
-//	bool result = true;
-//
-//	if (cell % GRIDSIZEX != 0)
-//		leftCell = cell - 1;
-//
-//	if ((cell + 1) % GRIDSIZEX != 0)
-//		rightCell = cell + 1;
-//
-//	//Check sides
-//	if (topCell >= 0 && result)
-//		result = CheckSides(SideD::Up, cell, topCell);
-//	if (bottomCell < GRIDSIZE && result)
-//		result = CheckSides(SideD::Down, cell, bottomCell);
-//	if (leftCell != -1 && result)
-//		result = CheckSides(SideD::Left, cell, leftCell);
-//	if (rightCell != -1 && result)
-//		result = CheckSides(SideD::Right, cell, rightCell);
-//
-//	//Check if grid has fully collapsed
-//	//if (m_SolvedTiles != GRIDSIZE)
-//		//if (m_GuessedCell == cell)
-//		//ChooseRandomCell();  
-//
-//	return result;
-//}
-
-//Reduce entropy of the adjacent cells
-//bool Simple::CheckSides(SideD side, int currentCell, int newCell)
-//{
-//	int startIndex = -1;
-//	std::vector<int> newConstrains;
-//
-//	switch (side)
-//	{
-//	case SideD::Up: startIndex = TILEAMOUNT * 0;
-//		break;
-//	case SideD::Left: startIndex = TILEAMOUNT * 3;
-//		break;
-//	case SideD::Down: startIndex = TILEAMOUNT * 2;
-//		break;
-//	case SideD::Right: startIndex = TILEAMOUNT * 1;
-//		break;
-//	}
-//
-//	std::vector<int> possibleConstrains;
-//
-//	//Check for possible constrains
-//	for (size_t i = 0; i < m_Constrain.m_Constrains[m_CellGrid[currentCell][0]].size(); i++)// 24
-//	{
-//		if (m_Constrain.m_Constrains[m_CellGrid[currentCell][0]][i] >= (startIndex + TILEAMOUNT))
-//			break;
-//
-//		if (m_Constrain.m_Constrains[m_CellGrid[currentCell][0]][i] >= startIndex)
-//			possibleConstrains.push_back(m_Constrain.m_Constrains[m_CellGrid[currentCell][0]][i]);
-//	}
-//
-//	//Reduce current constrains
-//	for (size_t i = 0; i < possibleConstrains.size(); i++)
-//	{
-//		int tile = possibleConstrains[i] - startIndex;
-//
-//		std::vector<int>::iterator it = std::find(m_CellGrid[newCell].begin(), m_CellGrid[newCell].end(), tile);
-//
-//		if (it != m_CellGrid[newCell].end())
-//			newConstrains.push_back(tile);
-//	}
-//
-//	if (newConstrains.size() == 0)
-//	{
-//		printf("Oof\n");
-//		return false;
-//	}
-//
-//	if (newConstrains.empty())
-//		assert(true && "ERROR: Impossible position remaining");
-//
-//	//If more than one constraint was left, overwrite the old constrains
-//	if (m_CellGrid[newCell].size() > 1)
-//	{
-//		if (m_CellGrid[newCell].size() == newConstrains.size())
-//		{
-//
-//
-//
-//		}
-//		else
-//		{
-//			m_CellGrid[newCell] = newConstrains;
-//			if (newConstrains.size() == 1)
-//			{
-//				m_SolvedTiles++;
-//				//CheckCell(newCell);
-//			}
-//			else
-//			{
-//				//m_CellStack->push_back(newCell);
-//			}
-//		}
-//	}
-//
-//	return true;
-//	//CheckCell(newCell);
-//}
 
 int Simple::GetAdjacentTile(int currentCell, SideD side)
 {
@@ -331,7 +192,7 @@ bool Simple::CheckSide(int currentCell, int adjacentCell, SideD side)
 
 	if (newConstrains.size() == 0)
 	{
-		printf("Oof\n");
+		printf("Unable to solve the WFC\n");
 		return false;
 	}
 

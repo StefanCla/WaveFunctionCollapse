@@ -1,7 +1,7 @@
 #pragma once
 
-#define GRIDSIZEX	20
-#define GRIDSIZEY	20
+#define GRIDSIZEX	5
+#define GRIDSIZEY	5
 #define GRIDSIZE GRIDSIZEX * GRIDSIZEY
 
 #define SPRITESHEETFILENAME "Custom.png"

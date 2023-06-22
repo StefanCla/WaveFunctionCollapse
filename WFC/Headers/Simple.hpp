@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <stack>
 
 class Constrain;
 
@@ -18,25 +17,33 @@ public:
 	Simple(Constrain& constrain);
 	~Simple();
 
+	//Initializes the WFC
 	void Initialization();
+
+	//Starts the WFC
 	void StartWFC();
+
+	//Restarts the WFC
 	void RestartWFC();
 
+	//Returns the cellgrid
 	std::vector<std::vector<int>> GetCellGrid();
 
 private:
+	//Run the WFC
 	void RunWFC();
+
+	//Choose a random cell with the lowest entropy
 	int ChooseRandomCell();
-	bool CheckCell(int cell);
-	bool CheckSides(SideD side, int currentCell, int newCell);
 
-
+	//Get adjectent tiles around the current tile
 	int GetAdjacentTile(int currentCell, SideD side);
+
+	//Check the adjectent tile
 	bool CheckSide(int currenCell, int adjacentCell, SideD side);
 
 private:
 	std::vector<std::vector<int>> m_CellGrid;
-	//std::vector<int>* m_CellStack;
 	Constrain& m_Constrain;
 
 	int m_RestartCount;
